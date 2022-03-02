@@ -13,7 +13,7 @@ variable "log_analytics_workspace_name" {
 }
 
 variable "tags" {
-  description = "The tags to associate with your network and subnets."
+  description = "The tags to associate with your resources"
   type        = map(string)
 
   default = {
