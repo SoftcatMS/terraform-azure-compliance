@@ -45,7 +45,7 @@ No modules.
 | <a name="input_location"></a> [location](#input\_location) | Azure locaton to use for the deployment of resources | `string` | n/a | yes |
 | <a name="input_log_analytics_workspace_name"></a> [log\_analytics\_workspace\_name](#input\_log\_analytics\_workspace\_name) | Azure log analytcis worksapce name | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Azure resource group name | `string` | n/a | yes |
-| <a name="input_tags"></a> [tags](#input\_tags) | The tags to associate with your network and subnets. | `map(string)` | <pre>{<br>  "ENV": "test"<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | The tags to associate with your resources | `map(string)` | <pre>{<br>  "ENV": "test"<br>}</pre> | no |
 
 ## Outputs
 
