@@ -4,12 +4,6 @@ data "azurerm_resource_group" "compliance" {
   name = var.resource_group_name
 }
 
-resource "azurerm_resource_group" "regulatory_compliance" {
-  name = data.azurerm_resource_group.compliance.name
-  location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
-  tags = var.tags
-}
-
 resource "azurerm_log_analytics_workspace" "regulatory_compliance" {
     name = "${var.log_analytics_workspace_name}"
     location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
