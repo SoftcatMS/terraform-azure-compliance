@@ -1,16 +1,19 @@
 data "azurerm_client_config" "current" {}
 data "azurerm_subscription" "current" {}
+data "azurerm_resource_group" "compliance" {
+  name = var.resource_group_name
+}
 
 resource "azurerm_resource_group" "regulatory_compliance" {
-  name = "${var.resource_group_name}"
-  location = var.location
+  name = data.azurerm_resource_group.compliance.name
+  location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
   tags = var.tags
 }
 
 resource "azurerm_log_analytics_workspace" "regulatory_compliance" {
     name = "${var.log_analytics_workspace_name}"
-    location = azurerm_resource_group.regulatory_compliance.location
-    resource_group_name = azurerm_resource_group.regulatory_compliance.name
+    location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
+    resource_group_name = data.azurerm_resource_group.compliance.name
     sku = "PerGB2018"
     retention_in_days = 30
     tags = var.tags
@@ -18,8 +21,8 @@ resource "azurerm_log_analytics_workspace" "regulatory_compliance" {
 
 resource "azurerm_log_analytics_solution" "regulatory_compliance" {
   solution_name = "SecurityCenterFree"
-  location = azurerm_resource_group.regulatory_compliance.location
-  resource_group_name = azurerm_resource_group.regulatory_compliance.name
+  location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
+  resource_group_name = data.azurerm_resource_group.compliance.name
   workspace_resource_id = azurerm_log_analytics_workspace.regulatory_compliance.id
   workspace_name = azurerm_log_analytics_workspace.regulatory_compliance.name
 
@@ -39,8 +42,8 @@ resource "azurerm_subscription_policy_assignment" "regulatory_compliance" {
 
 resource "azurerm_security_center_automation" "regulatory_compliance" {
   name                = "ExportToWorkspace"
-  location            = azurerm_resource_group.regulatory_compliance.location
-  resource_group_name = azurerm_resource_group.regulatory_compliance.name
+  location            = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
+  resource_group_name = data.azurerm_resource_group.compliance.name
 
   action {
     type              = "LogAnalytics"
