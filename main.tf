@@ -5,24 +5,24 @@ data "azurerm_resource_group" "compliance" {
 }
 
 resource "azurerm_log_analytics_workspace" "regulatory_compliance" {
-    name = "${var.log_analytics_workspace_name}"
-    location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
-    resource_group_name = data.azurerm_resource_group.compliance.name
-    sku = "PerGB2018"
-    retention_in_days = 30
-    tags = var.tags
+  name                = var.log_analytics_workspace_name
+  location            = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
+  resource_group_name = data.azurerm_resource_group.compliance.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+  tags                = var.tags
 }
 
 resource "azurerm_log_analytics_solution" "regulatory_compliance" {
-  solution_name = "SecurityCenterFree"
-  location = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
-  resource_group_name = data.azurerm_resource_group.compliance.name
+  solution_name         = "SecurityCenterFree"
+  location              = var.location != null ? var.location : data.azurerm_resource_group.compliance.location
+  resource_group_name   = data.azurerm_resource_group.compliance.name
   workspace_resource_id = azurerm_log_analytics_workspace.regulatory_compliance.id
-  workspace_name = azurerm_log_analytics_workspace.regulatory_compliance.name
+  workspace_name        = azurerm_log_analytics_workspace.regulatory_compliance.name
 
   plan {
     publisher = "Microsoft"
-    product = "OMSGallery/SecurityCenterFree"
+    product   = "OMSGallery/SecurityCenterFree"
   }
 }
 
@@ -40,18 +40,18 @@ resource "azurerm_security_center_automation" "regulatory_compliance" {
   resource_group_name = data.azurerm_resource_group.compliance.name
 
   action {
-    type              = "LogAnalytics"
-    resource_id       = azurerm_log_analytics_workspace.regulatory_compliance.id
-    
+    type        = "LogAnalytics"
+    resource_id = azurerm_log_analytics_workspace.regulatory_compliance.id
+
   }
 
   source {
     event_source = "RegulatoryComplianceAssessment"
-    
+
   }
   source {
     event_source = "RegulatoryComplianceAssessmentSnapshot"
-    
+
   }
 
   scopes = ["/subscriptions/${data.azurerm_client_config.current.subscription_id}"]
