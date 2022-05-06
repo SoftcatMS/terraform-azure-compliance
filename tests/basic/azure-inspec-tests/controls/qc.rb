@@ -2,8 +2,6 @@
 
 # Test values
 
-resource_group1 = 'rg-test-compliance'
-
-describe azure_policy_assignments(resource_group: resource_group1) do
+describe azure_policy_assignments do
   its('names') { should include('Azure Security Benchmark') }
 end
